@@ -1,0 +1,36 @@
+using MyAiLanguageCompanion;
+
+namespace MyAiLanguageCompanion.Tests;
+
+public class LanguageServiceTests
+{
+    [Fact]
+    public void DetectLanguage_ReturnsRussian_ForCyrillicText()
+    {
+        var detector = new OfflineLanguageDetector();
+
+        var result = detector.DetectLanguage("привет как дела");
+
+        Assert.Equal(SupportedLanguage.Russian, result);
+    }
+
+    [Fact]
+    public void TranslateAsync_ReturnsKnownDutchPhrase()
+    {
+        var translator = new PhraseDictionaryTranslator(new OfflineLanguageDetector());
+
+        var result = translator.TranslateAsync("hello", SupportedLanguage.Dutch).Result;
+
+        Assert.Equal("hallo", result.TranslatedText);
+    }
+
+    [Fact]
+    public void PronunciationAnalyzer_MarksUnknownWordAsNeedsPractice()
+    {
+        var analyzer = new PronunciationAnalyzer();
+
+        var result = analyzer.Analyze("hoe gaat het", "hoe ghat het");
+
+        Assert.Contains(result.Results, x => x.Status.Contains("Needs practice", StringComparison.OrdinalIgnoreCase));
+    }
+}

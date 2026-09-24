@@ -1,0 +1,37 @@
+namespace MyAiLanguageCompanion;
+
+public sealed class LiveSessionService : ILiveSessionService
+{
+    private readonly IAudioCaptureService _audioCaptureService;
+    private readonly ISpeechRecognizer _speechRecognizer;
+    private readonly ILanguageDetector _languageDetector;
+
+    public LiveSessionService(IAudioCaptureService audioCaptureService, ISpeechRecognizer speechRecognizer, ILanguageDetector languageDetector)
+    {
+        _audioCaptureService = audioCaptureService;
+        _speechRecognizer = speechRecognizer;
+        _languageDetector = languageDetector;
+    }
+
+    public string CurrentTranscript { get; private set; } = string.Empty;
+
+    public async Task StartAsync(string source, CancellationToken cancellationToken = default)
+    {
+        if (source.Contains("Microphone", StringComparison.OrdinalIgnoreCase))
+        {
+            await _audioCaptureService.StartMicrophoneAsync(cancellationToken);
+        }
+        else if (source.Contains("System", StringComparison.OrdinalIgnoreCase))
+        {
+            await _audioCaptureService.StartSystemAudioAsync(cancellationToken);
+        }
+
+        await _speechRecognizer.StartAsync(cancellationToken);
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken = default)
+    {
+        await _speechRecognizer.StopAsync(cancellationToken);
+        await _audioCaptureService.StopAsync(cancellationToken);
+    }
+}
