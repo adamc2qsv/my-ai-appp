@@ -1,8 +1,8 @@
 namespace MyAiLanguageCompanion;
 
-public interface ISpeechRecognizer
+public interface ILanguageDetector
 {
-    Task StartAsync(CancellationToken cancellationToken = default);
-    Task StopAsync(CancellationToken cancellationToken = default);
-    Task<string> RecognizeOnceAsync(CancellationToken cancellationToken = default);
+    SupportedLanguage DetectLanguage(string text);
+    bool IsLowConfidence(string text);
+    ModelStatus GetModelStatus();
 }
