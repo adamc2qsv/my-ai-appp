@@ -1,7 +1,7 @@
 namespace MyAiLanguageCompanion;
 
-public interface ILanguageDetector
+public interface ITranslator
 {
-    SupportedLanguage DetectLanguage(string text);
-    bool IsLowConfidence(string text);
+    Task<TranslationResult> TranslateAsync(string text, SupportedLanguage targetLanguage, SupportedLanguage? detectedSourceLanguage = null, SupportedLanguage? manualSourceLanguage = null, CancellationToken cancellationToken = default);
+    ModelStatus GetModelStatus();
 }
