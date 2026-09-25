@@ -1,6 +1,12 @@
 namespace MyAiLanguageCompanion;
 
-public interface ITranslator
+public interface ITextToSpeech
 {
-    Task<TranslationResult> TranslateAsync(string text, SupportedLanguage targetLanguage, SupportedLanguage? detectedSourceLanguage = null, SupportedLanguage? manualSourceLanguage = null, CancellationToken cancellationToken = default);
+    List<string> GetVoices();
+    Task SpeakWordAsync(string text, SupportedLanguage language, double rate = 1.0, CancellationToken cancellationToken = default);
+    Task SpeakSentenceAsync(string text, SupportedLanguage language, double rate = 1.0, CancellationToken cancellationToken = default);
+    Task PauseAsync(CancellationToken cancellationToken = default);
+    Task ResumeAsync(CancellationToken cancellationToken = default);
+    Task StopAsync(CancellationToken cancellationToken = default);
+    ModelStatus GetModelStatus();
 }
