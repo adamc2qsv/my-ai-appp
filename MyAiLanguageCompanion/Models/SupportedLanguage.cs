@@ -1,21 +1,36 @@
-using Microsoft.Extensions.DependencyInjection;
-
 namespace MyAiLanguageCompanion;
 
-public static class ServiceProviderFactory
+public enum SupportedLanguage
 {
-    public static IServiceProvider Create()
+    English,
+    Spanish,
+    Dutch,
+    Russian
+}
+
+public static class SupportedLanguageExtensions
+{
+    public static string GetDisplayName(this SupportedLanguage language)
     {
-        var services = new ServiceCollection();
+        return language switch
+        {
+            SupportedLanguage.English => "🇬🇧 English",
+            SupportedLanguage.Spanish => "🇪🇸 Spanish",
+            SupportedLanguage.Dutch => "🇳🇱 Dutch",
+            SupportedLanguage.Russian => "🇷🇺 Russian",
+            _ => language.ToString()
+        };
+    }
 
-        services.AddSingleton<ILanguageDetector, OfflineLanguageDetector>();
-        services.AddSingleton<ITextToSpeech, WindowsTextToSpeechService>();
-        services.AddSingleton<ITranslator, PhraseDictionaryTranslator>();
-        services.AddSingleton<IPronunciationAnalyzer, PronunciationAnalyzer>();
-        services.AddSingleton<IAudioCaptureService, AudioCaptureService>();
-        services.AddSingleton<ISpeechRecognizer, WindowsSpeechRecognizer>();
-        services.AddSingleton<ILiveSessionService, LiveSessionService>();
-
-        return services.BuildServiceProvider();
+    public static string ToCode(this SupportedLanguage language)
+    {
+        return language switch
+        {
+            SupportedLanguage.English => "en",
+            SupportedLanguage.Spanish => "es",
+            SupportedLanguage.Dutch => "nl",
+            SupportedLanguage.Russian => "ru",
+            _ => "en"
+        };
     }
 }
