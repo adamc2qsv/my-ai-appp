@@ -1,14 +1,9 @@
 namespace MyAiLanguageCompanion;
 
-public interface IAudioCaptureService
+public interface ISpeechRecognizer
 {
-    bool IsCapturing { get; }
-    List<string> AvailableInputDevices { get; }
-    List<string> AvailableOutputDevices { get; }
-    List<string> AvailableApplicationSources { get; }
-
-    Task RefreshAsync();
-    Task StartMicrophoneAsync(CancellationToken cancellationToken = default);
-    Task StartSystemAudioAsync(CancellationToken cancellationToken = default);
+    Task StartAsync(CancellationToken cancellationToken = default);
     Task StopAsync(CancellationToken cancellationToken = default);
+    Task<string> RecognizeOnceAsync(CancellationToken cancellationToken = default);
+    ModelStatus GetModelStatus();
 }
